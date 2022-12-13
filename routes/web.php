@@ -183,6 +183,7 @@ Route::group(['prefix' => USER_NAME, 'namespace' => USER_NAMESPACE_PREFIX, 'midd
             Route::get('generate-invoice/{id}','generateInvoice')->name('generate_invoice');
             Route::get('generate-short-invoice/{id}','generateInvoice')->name('generate_short_invoice');
             Route::post('generate-catalogue','generateCatalogue')->name('generate_catalogue');
+            Route::post('generate-main-catalogue','generateSingleCatalogue')->name('generate_single_catalogue');
         });
     });
 });

@@ -56,12 +56,18 @@
                 </fieldset>
             </div>
 
-            <div class="col-md-6 mt-4">
+            <div class="col-md-12 mt-4">
                 <button class="btn btn-primary glow" data-bind="click:$root.ApplyFilter">@lang('messages.search_txt')</button>
                 <button class="btn btn-warning glow" data-bind="click:$root.ClearSearch">@lang('messages.clear_txt')</button>
                 <button class="btn btn-danger glow" data-bind="click:$root.exportData">Generate</button>
+                
                 @if(!empty($configData['cataloguePath']))
                 <a class="btn btn-success glow" href="{{$configData['cataloguePath']}}" target="_blank">View Catalogue</a>
+                @endif
+
+                <button class="btn btn-danger glow" data-bind="click:$root.exportSingleData">Single Generate</button>
+                @if(!empty($configData['singleCataloguePath']))
+                <a class="btn btn-success glow" href="{{$configData['singleCataloguePath']}}" target="_blank">View Image</a>
                 @endif
 
                 <div class="btn-group me-3" data-bind="visible:$root.selectedProductIDs().length > 0">
@@ -341,7 +347,7 @@
 @section('script')
 <script type="text/javascript" src="{{asset('public/vendor/select2/js/select2.min.js')}}"></script>
 <script type="text/javascript">
-    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", storeWeightUpdate="{{$storeWeightUpdate}}", destroyRecord="{{$destroyRecord}}", configData=@json($configData), getProductImagesRoute="{{$getProductImagesRoute}}", storeProductImageRoute="{{$storeProductImageRoute}}", deleteProductImageRoute="{{$deleteProductImageRoute}}", storePopularURL ="{{route('products.store_popular')}}";
+    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", storeWeightUpdate="{{$storeWeightUpdate}}", destroyRecord="{{$destroyRecord}}", configData=@json($configData), getProductImagesRoute="{{$getProductImagesRoute}}", storeProductImageRoute="{{$storeProductImageRoute}}", deleteProductImageRoute="{{$deleteProductImageRoute}}", storePopularURL ="{{route('products.store_popular')}}", generateSingleCatalogue="{{route('invoices.generate_single_catalogue')}}";
 </script>
 <script src="{{asset('public/js/pagejs/products.js?'.time())}}"></script>
 @endsection

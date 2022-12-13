@@ -134,4 +134,66 @@ class InvoiceController extends BaseController
         
         return redirect()->route('products.index');
     }
+
+    /**
+     * Generate Main Invoice
+     * 
+     * @param string encryptId
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generateSingleCatalogue(Request $request)
+    {
+        $searchParams = $request->all();
+        $query = \App\Models\Product::whereHas('size')->with('size');
+
+        $query = $query->where(function($q) use($searchParams){
+            if(array_key_exists('lu_category_id',$searchParams) && !empty($searchParams['lu_category_id'])){
+                $categoryId = $searchParams['lu_category_id'];
+                $q = $q->where('lu_category_id',$categoryId);
+            }
+
+            if(array_key_exists('lu_sub_category_id',$searchParams) && !empty($searchParams['lu_sub_category_id'])){
+                $subCategoryId = $searchParams['lu_sub_category_id'];
+                $q = $q->where('lu_sub_category_id',$subCategoryId);
+            }
+
+            if(array_key_exists('sub_sub_category_id',$searchParams) && !empty($searchParams['sub_sub_category_id'])){
+                $subSubCategoryId = $searchParams['sub_sub_category_id'];
+                $q = $q->where('sub_sub_category_id',$subSubCategoryId);
+            }
+
+            if(array_key_exists('lu_size_id',$searchParams) && !empty($searchParams['lu_size_id'])){
+                $sizeId = $searchParams['lu_size_id'];
+                $q = $q->where('lu_size_id',$sizeId);
+            }
+
+            if(array_key_exists('is_popular',$searchParams) && !empty($searchParams['is_popular'])){
+                $isPopular = $searchParams['is_popular'] == 2 ? 0 : 1;
+                $q = $q->where('is_popular',$isPopular);
+            }
+
+            if(array_key_exists('name',$searchParams) && !empty(trim($searchParams['name'])) && (trim($searchParams['name']) != "") ) {
+                $name = $searchParams['name'];
+                $q = $q->where('code','LIKE','%'.$name.'%')->orWhere('weight','LIKE','%'.$name.'%');
+            }
+        });
+        
+        $records = $query->get()->toArray();
+
+        if (count($records)>0) {
+            foreach($records as $key => $item) {
+                $records[$key]['size_name'] = $item['size']['name'];
+                $records[$key]['thumb_image'] = AppConstant::getImageThumb($item['thumb_image']);
+                unset($records[$key]['size']);
+            }
+        }
+
+        $pdf = PDF::loadView('pdf/single-catalogue',['records' => $records]);
+        //return $pdf->stream();
+        $fileName = 'single-catalogue.pdf';
+        $pdf->save(INQUIRY_FOLDER_PATH.$fileName);
+        return redirect()->route('products.index');
+    }
 }

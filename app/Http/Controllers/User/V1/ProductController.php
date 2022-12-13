@@ -50,6 +50,7 @@ class ProductController extends BaseController
             'codes' => $codes,
             'percentages' => $percentages,
             'cataloguePath' => $cataloguePath,
+            'singleCataloguePath' => asset('public/'.INVOICE_FOLDER_NAME.'/single-catalogue.pdf'),
         );
 
         return view('user/products',[
@@ -221,7 +222,7 @@ class ProductController extends BaseController
 
                     //Send Notification 
                     // Get all tokens
-                    $deviceTokens = \App\Models\User::where('is_approved',1)->whereNotNull('device_token')->pluck('device_token')->toArray();
+                    $deviceTokens = \App\Models\User::where('is_approved',2)->whereNotNull('device_token')->pluck('device_token')->toArray();
                     if(!empty($deviceTokens)){
                         $message = "New product has been added.";
                         $this->pushNotifications($deviceTokens,$message,$record->id);

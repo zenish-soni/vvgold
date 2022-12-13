@@ -510,6 +510,10 @@ var ViewModel = function() {
     self.exportData = function(){
         $("#formSearch").submit();
     }
+
+    self.exportSingleData = function(){
+        $("#formSearch").attr('action',generateSingleCatalogue).submit();
+    }
 };
                         
 $(document).ready(function(){
