@@ -30,4 +30,11 @@ class LuSubCategory extends Model
     public function category(){
         return $this->belongsTo(LuCategory::class,'lu_category_id');
     }
+
+    /**
+     * Get Sub Category Name
+     **/
+    public function subSubCategory(){
+        return $this->hasMany(SubSubCategory::class,'lu_sub_category_id');
+    }
 }

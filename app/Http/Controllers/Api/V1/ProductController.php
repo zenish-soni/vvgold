@@ -41,6 +41,10 @@ class ProductController extends BaseController
                     $query = $query->where('lu_sub_category_id',$reqData['sub_category_id']);
                 }
 
+                if(!empty($reqData['sub_sub_category_id'])){
+                    $query = $query->where('sub_sub_category_id',$reqData['sub_sub_category_id']);
+                }
+
                 $records = $query->orderByDesc('id')->take($limit)->offset($offset)->get()->toArray();
 
                 if(!empty($records)){

@@ -133,7 +133,50 @@ class DashboardController extends BaseController
             }else{
                 $categoryId = $reqData['id'];
 
-                $response->Data = \App\Models\LuSubCategory::where('lu_category_id',$categoryId)->select('id','name','image')->get()->toArray();
+                $records = \App\Models\LuSubCategory::withCount('subSubCategory')->where('lu_category_id',$categoryId)->get()->toArray();
+
+                if(!empty($records)){
+                    foreach($records as $key => $record){
+                        unset($records[$key]['created_at'], $records[$key]['updated_at'], $records[$key]['deleted_at']);
+                    }
+                }
+
+                $response->Data = $records;
+                $response->IsSuccess = true;
+            }
+        }
+        else{
+            $response->Message = $checkRequiredField;
+        }
+        return $this->GetJsonResponse($response);
+    }
+
+    /**
+     * Get Sub Sub Categories
+     * Method POST
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubSubCategory(Request $request){
+        $response = new ServiceResponse();
+        $reqData = $request->all();
+        $checkFields = array('id');
+        $checkRequiredField = $this->checkRequestData($checkFields,$reqData);
+        
+        if($checkRequiredField == 'SUCC100'){
+            $id = $reqData['id'];
+
+            $validator = Validator::make($reqData, [
+                'id' => 'required'
+            ]);
+           
+            if ($validator->fails()) {
+                $response->Message = $this->getValidationMessagesFormat($validator->messages());
+            }else{
+                $categoryId = $reqData['id'];
+
+                $response->Data = \App\Models\SubSubCategory::where('lu_sub_category_id',$categoryId)->select('id','name','image')->get()->toArray();
                 $response->IsSuccess = true;
             }
         }

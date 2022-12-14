@@ -24,6 +24,7 @@ Route::group(['prefix' => API_VERSION, 'namespace' => API_NAMESPACE_PREFIX],func
             Route::get('logout','getLogout');
             Route::get('categories','getCategory');
             Route::post('sub-categories','getSubCategory');
+            Route::post('sub-sub-categories','getSubSubCategory');
             Route::get('dashboard-data','getDashboardData');
         });
 
