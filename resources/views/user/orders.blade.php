@@ -11,7 +11,7 @@
         <form class="row justify-content-end" data-bind="with:$root.SearchModel">
             <div class="col-md-3">
                 <fieldset class="form-group">
-                    <select class="form-control" data-bind="options:$root.users, optionsText:'phone_number', optionsValue:'id', value:$data.user_id, optionsCaption:'Select User', select2:{ placeholder: 'Select User'}"></select>
+                    <select class="form-control" data-bind="options:$root.users, optionsText:'name', optionsValue:'id', value:$data.user_id, optionsCaption:'Select User', select2:{ placeholder: 'Select User'}"></select>
                 </fieldset>
             </div>
             <div class="col-md-6">
@@ -156,7 +156,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Order Detail</h5>
+                <h5 class="modal-title">Order Detail Total Weight: <span data-bind="text:$root.totalWeight"></span></h5>
                 <button type="button" class="btn-close" class="close" data-bind="click:$root.closeModal"></button>
             </div>
 

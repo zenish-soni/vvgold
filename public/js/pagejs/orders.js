@@ -87,9 +87,11 @@ var ViewModel = function() {
 
     //Details
     self.details = ko.observableArray();
+    self.totalWeight = ko.observable();
 
     self.showDetailHandler = (data) => {
         self.details(data.details());
+        self.totalWeight(data.total_weight());
         $("#viewDetail").modal('show');
     }
 

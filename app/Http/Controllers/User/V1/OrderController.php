@@ -22,6 +22,11 @@ class OrderController extends BaseController
         $records = route('orders.lists');
         $changeStatus = route('order.change_status');
         $users = User::where('user_type_id',2)->get();
+        if(!empty($users)){
+            foreach($users as $key => $value){
+                $users[$key]['name'] = $value['name'].' - '.$value['phone_number'];
+            }
+        }
 
         return view('user/orders',[
             'title'         => $title, 
