@@ -107,10 +107,10 @@
                             </div>
                         </th>
                         <th>#</th>
+                        <th>Code</th>
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Sub Sub Category</th>
-                        <th>Code</th>
                         <th>Weight</th>
                         <th>Image</th>
                         <th>Size</th>
@@ -128,10 +128,10 @@
                             </div>
                         </td>
                         <td data-bind="text:$data.Index"></td>
+                        <td data-bind="text:$data.code"></td>
                         <td data-bind="text:$data.category_name"></td>
                         <td data-bind="text:$data.sub_category_name"></td>
                         <td data-bind="text:$data.sub_sub_category_name"></td>
-                        <td data-bind="text:$data.code"></td>
                         <td>
                             <div class="d-flex" style="cursor: pointer;">
                                 <div data-bind="visible:$data.is_edit() == false ,text:$data.weight, event:{dblclick:$root.updateWeightHandler}"></div>
