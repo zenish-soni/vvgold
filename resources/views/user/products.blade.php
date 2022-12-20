@@ -43,6 +43,13 @@
             </div>
 
             <div class="col-md-2">
+                <label>Search Term</label>
+                <fieldset class="form-group">
+                    <select class="form-control" name="search_term_id" data-bind="options:$root.searchTerms, optionsText:'name', optionsValue:'id', value:$data.search_term_id, optionsCaption:'Select Term', select2:{ placeholder: 'Select Term'}"></select>
+                </fieldset>
+            </div>
+
+            <div class="col-md-2">
                 <label>Is Popular?</label>
                 <fieldset class="form-group">
                     <select class="form-control" name="is_popular" data-bind="options:$root.popularArr, optionsText:'name', optionsValue:'id', value:$data.is_popular, optionsCaption:'Select Option'"></select>
@@ -241,6 +248,13 @@
                         <label>Sub Sub Category</label>
                         <div class="form-group">
                             <select class="form-control" name="sub_sub_category_id" data-bind="options:$root.subSubCategories, optionsText:'name', optionsValue:'id', value:$data.sub_sub_category_id, optionsCaption:'Select Category', select2:{ placeholder: 'Select Category', dropdownParent: $('#subSubCategoryId')}"></select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 mb-3" id="searchTermId">
+                        <label>Search Terms</label>
+                        <div class="form-group">
+                            <select class="form-control" name="search_term_id[]" multiple="multiple" data-bind="options:$root.searchTerms, optionsText:'name', optionsValue:'id', selectedOptions:$data.search_term_id, optionsCaption:'Select Term', select2:{ placeholder: 'Select Term', dropdownParent: $('#searchTermId')}"></select>
                         </div>
                     </div>
 

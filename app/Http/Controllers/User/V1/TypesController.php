@@ -17,6 +17,7 @@ class TypesController extends BaseController
     protected $typeModel = [
         'size' => 'App\Models\LuSize',
         'code' => 'App\Models\LuCode',
+        'search-term' => 'App\Models\LuSearchTerm',
     ];
 
     /**
@@ -24,7 +25,9 @@ class TypesController extends BaseController
      */
     protected function getTitle($type){
         $typeTitles = [
-            'size' => "Size"
+            'size' => "Size",
+            'code' => "Code",
+            'search-term' => "Search Term",
         ];  
         if(empty($type) || !array_key_exists($type, $typeTitles) ){
             $type = 'size';

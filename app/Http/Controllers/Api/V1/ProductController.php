@@ -6,7 +6,7 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Infrastructure\ServiceResponse, App\Infrastructure\AppConstant;
 use App\Models\Product, App\Models\UserCart, App\Models\Order, App\Models\OrderDetail;
-use Auth, Validator;
+use Auth, Validator, DB;
 
 class ProductController extends BaseController
 {
@@ -20,7 +20,7 @@ class ProductController extends BaseController
     public function getProducts(Request $request){
         $response = new ServiceResponse();
         $reqData = $request->all();
-        $checkFields = array('category_id','limit');
+        $checkFields = array('limit');
         $checkRequiredField = $this->checkRequestData($checkFields,$reqData);
         
         if($checkRequiredField == 'SUCC100'){
@@ -29,14 +29,24 @@ class ProductController extends BaseController
             $offset = (!empty($reqData) && !empty($reqData['offset'])) ? $reqData['offset'] : 0;
 
             $validator = Validator::make($reqData, [
-                'category_id' => 'required'
+                'limit' => 'required'
             ]);
            
             if ($validator->fails()) {
                 $response->Message = $this->getValidationMessagesFormat($validator->messages());
             }else{
                 
-                $query = Product::with('size')->where('lu_category_id',$categoryId);
+                $query = Product::with('size');
+
+                if(!empty($reqData['lu_category_id'])){
+                    $query = $query->where('lu_category_id',$reqData['lu_category_id']);
+                }
+
+                if(!empty($reqData['search_term_id'])){
+                    $searchTermId = $reqData['search_term_id'];
+                    $query = $query->whereRaw(DB::RAW("JSON_CONTAINS(search_term_ids,{$searchTermId},'$')"));
+                }
+
                 if(!empty($reqData['sub_category_id'])){
                     $query = $query->where('lu_sub_category_id',$reqData['sub_category_id']);
                 }

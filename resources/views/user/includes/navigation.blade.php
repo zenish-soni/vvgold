@@ -44,6 +44,13 @@
                         </a>
                     </li>
 
+                    <li class="menu-item @if(Request::path() == 'user/search-term') active @endif">
+                        <a href="{{route('lookup.types.index','search-term')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-support"></i>
+                            <div data-i18n="Support">Search Term</div>
+                        </a>
+                    </li>
+
                     <li class="menu-item @if(Request::path() == 'user/lookup/code') active @endif">
                         <a href="{{route('lookup.types.index','code')}}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-support"></i>

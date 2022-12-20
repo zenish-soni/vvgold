@@ -43,6 +43,7 @@ class DashboardController extends BaseController
             }
         }
         
+        $response->search_terms = \App\Models\LuSearchTerm::select('id','name')->get();
         $response->sliders = $sliders;
         $response->bank_name = $setting->bank_name;
         $response->bank_account_name = $setting->bank_account_name;

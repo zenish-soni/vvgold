@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User\V1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Infrastructure\ServiceResponse, App\Infrastructure\PageModel, App\Infrastructure\AppConstant;
-use App\Models\Product, App\Models\LuSize, App\Models\LuCategory, App\Models\LuCode, App\Models\SubSubCategory, App\Models\ProductPhoto;
+use App\Models\Product, App\Models\LuSize, App\Models\LuCategory, App\Models\LuCode, App\Models\SubSubCategory, App\Models\ProductPhoto, App\Models\LuSearchTerm;
 use Validator, DB;
 
 class ProductController extends BaseController
@@ -26,6 +26,7 @@ class ProductController extends BaseController
         $subSubCategories = SubSubCategory::get()->toArray();
         $sizes = LuSize::get()->toArray();
         $codes = LuCode::get()->toArray();
+        $searchTerms = LuSearchTerm::get()->toArray();
         $percentages = $this->getSizePercentage();
 
         $records = route('products.lists');
@@ -50,6 +51,7 @@ class ProductController extends BaseController
             'codes' => $codes,
             'percentages' => $percentages,
             'cataloguePath' => $cataloguePath,
+            'searchTerms' => $searchTerms,
             'singleCataloguePath' => asset('public/'.INVOICE_FOLDER_NAME.'/single-catalogue.pdf'),
         );
 
@@ -104,6 +106,11 @@ class ProductController extends BaseController
             if(array_key_exists('lu_size_id',$searchParams) && !empty($searchParams['lu_size_id'])){
                 $sizeId = $searchParams['lu_size_id'];
                 $q = $q->where('lu_size_id',$sizeId);
+            }
+
+            if(array_key_exists('search_term_id',$searchParams) && !empty($searchParams['search_term_id'])){
+                $searchTermId = $searchParams['search_term_id'];
+                $q = $q->whereRaw(DB::RAW("JSON_CONTAINS(search_term_ids,{$searchTermId},'$')"));
             }
 
             if(array_key_exists('is_popular',$searchParams) && !empty($searchParams['is_popular'])){
@@ -208,6 +215,7 @@ class ProductController extends BaseController
                     $record->sub_sub_category_id  = !empty($reqData['sub_sub_category_id']) ? $reqData['sub_sub_category_id'] : NULL;
                     $record->code = $reqData['code'];
                     $record->weight = $size['weight'];
+                    $record->search_term_ids = !empty($reqData['search_term_id']) ? json_encode(array_map('intval',$reqData['search_term_id'])) : NULL;
 
                     $thumbImagePath = $record->code.time().$imagePath;
 

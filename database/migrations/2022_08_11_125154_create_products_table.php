@@ -23,6 +23,7 @@ return new class extends Migration
             $table->char('code');
             $table->char('image');
             $table->char('thumb_image');
+            $table->json('search_term_ids');
             $table->string('description')->nullable();
             $table->unsignedInteger('width');
             $table->unsignedInteger('height');
