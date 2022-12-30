@@ -52,7 +52,7 @@ class OrderController extends BaseController
         $limit = $pageSize;
         $offset = ($pageIndex - 1) * $pageSize;
 
-        $query = Order::whereHas('details')->whereHas('user')->with('details.product.size','user');
+        $query = Order::whereHas('details.product')->whereHas('user')->with('details.product.size','user');
         $searchParams = $reqData['Data']['SearchParams'];
 
         $query = $query->where(function($q) use($searchParams){
@@ -76,6 +76,7 @@ class OrderController extends BaseController
             $index = ($pageSize * ($pageIndex-1)) + 1;
             foreach($records as $key => $item) {
                 $records[$key]['Index'] = $index++;
+
                 $totalWeight = array_sum(array_map(function($a){
                     return $a['product']['weight'] * $a['quantity'];
                 }, $item['details']));

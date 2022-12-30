@@ -57,4 +57,15 @@ class Product extends Model
     public function photos(){
         return $this->hasMany(ProductPhoto::class,'product_id');
     }
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeActive($query)
+    {
+        $query->where('status', 1);
+    }
 }

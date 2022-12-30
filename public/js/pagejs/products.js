@@ -516,6 +516,15 @@ var ViewModel = function() {
     self.exportSingleData = function(){
         $("#formSearch").attr('action',generateSingleCatalogue).submit();
     }
+
+    self.stateChange = function(){
+        var checkedValue = $(event.target).prop('checked');
+        var getClickEle = $(event.target).attr('id');
+        AjaxCall(changeStatus,ko.toJSON({ id: getClickEle, checkedValue: checkedValue}), "post", "json", "application/json",true).done(function (response) {
+            ShowNotify(response);
+        });
+        return true;
+    }
 };
                         
 $(document).ready(function(){

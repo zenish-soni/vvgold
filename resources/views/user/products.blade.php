@@ -122,6 +122,7 @@
                         <th>Image</th>
                         <th>Size</th>
                         <th>Is Popular?</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -156,6 +157,12 @@
                         </td>
                         <td data-bind="text:$data.size_name"></td>
                         <td data-bind="text:$data.is_popular"></td>
+                        <td>
+                            <label class="form-switch">
+                                <input type="checkbox" data-bind="checked: $data.status,attr:{name:$data.id()+'status',id:$data.id()},click:$root.stateChange">
+                                <i></i>
+                            </label>
+                        </td>
                         <td>
                             <div class="btn-group">
                                 <!-- <button class="btn btn-sm icon" data-bind="click:$root.updateRecord"><i class="bx bxs-edit"></i></button> -->
@@ -361,7 +368,7 @@
 @section('script')
 <script type="text/javascript" src="{{asset('public/vendor/select2/js/select2.min.js')}}"></script>
 <script type="text/javascript">
-    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", storeWeightUpdate="{{$storeWeightUpdate}}", destroyRecord="{{$destroyRecord}}", configData=@json($configData), getProductImagesRoute="{{$getProductImagesRoute}}", storeProductImageRoute="{{$storeProductImageRoute}}", deleteProductImageRoute="{{$deleteProductImageRoute}}", storePopularURL ="{{route('products.store_popular')}}", generateSingleCatalogue="{{route('invoices.generate_single_catalogue')}}";
+    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", storeWeightUpdate="{{$storeWeightUpdate}}", destroyRecord="{{$destroyRecord}}", configData=@json($configData), getProductImagesRoute="{{$getProductImagesRoute}}", storeProductImageRoute="{{$storeProductImageRoute}}", deleteProductImageRoute="{{$deleteProductImageRoute}}", storePopularURL ="{{route('products.store_popular')}}", generateSingleCatalogue="{{route('invoices.generate_single_catalogue')}}", changeStatus="{{$changeStatus}}";
 </script>
 <script src="{{asset('public/js/pagejs/products.js?'.time())}}"></script>
 @endsection

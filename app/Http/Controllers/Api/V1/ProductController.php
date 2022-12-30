@@ -36,7 +36,7 @@ class ProductController extends BaseController
                 $response->Message = $this->getValidationMessagesFormat($validator->messages());
             }else{
                 
-                $query = Product::with('size');
+                $query = Product::active()->with('size');
 
                 if(!empty($reqData['lu_category_id'])){
                     $query = $query->where('lu_category_id',$reqData['lu_category_id']);
@@ -188,7 +188,13 @@ class ProductController extends BaseController
         //Get User Cart Details
         $records = UserCart::whereHas('product')->with('product.size')->where('user_id',$authId)->get()->toArray();
         
+        $totalWeight = 0;
+
         if(!empty($records)){
+            $totalWeight = array_sum(array_map(function($a){
+                return $a['product']['weight'] * $a['quantity'];
+            }, $records));
+
             foreach($records as $key => $record){
                 $image = AppConstant::getImage($record['product']['image']);
                 $records[$key]['image'] = $image;
@@ -200,6 +206,7 @@ class ProductController extends BaseController
         }
 
         $response->Data = $records;
+        $response->total_weight = $totalWeight;
         $response->total_item = UserCart::where('user_id',$authId)->count();
 
         $response->IsSuccess = true;
@@ -265,6 +272,8 @@ class ProductController extends BaseController
                 $productDetail = Product::find($id);
 
                 $response->id = $productDetail->id;
+                $response->percentage = $productDetail->percentage;
+                $response->image_width = $productDetail->image_width;
                 $response->category_name = $productDetail->category->name;
                 $response->sub_category_name = !empty($productDetail->subCategory) ? $productDetail->subCategory->name : '';
                 $response->sub_sub_category_name = !empty($productDetail->subSubCategory) ? $productDetail->subSubCategory->name : '';

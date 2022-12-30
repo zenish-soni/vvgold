@@ -516,17 +516,18 @@ class BaseController extends Controller
     /**
     * Send notification for new products
     **/
-    public function pushNotifications($deviceTokens,$message,$id){        
+    public function pushNotifications($deviceToken,$message,$id,$image){        
         $msg = array(
             'body'  => $message,
             'id' => $id,
             'title' => "VV Gold",
             'icon'  => "Default Icon",
             'sound' => 'mySound',
-            'timestamp' => time()
+            'timestamp' => time(),
+            'image' => $image
         );
 
-        $fields = array('registration_ids' => $deviceTokens, 'notification' => $msg, 'data' => $msg, "priority" => "high");
+        $fields = array('registration_ids' => $deviceToken, 'notification' => $msg, 'data' => $msg, "priority" => "high");
         $headers = array('Authorization: key=' . FCM_AUTHORIZATION_KEY,'Content-Type: application/json');
         $isSent = 0;
 

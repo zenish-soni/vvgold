@@ -47,7 +47,7 @@ class UserController extends BaseController
         $limit = $pageSize;
         $offset = ($pageIndex - 1) * $pageSize;
 
-        $query = User::where('user_type_id','!=',1);
+        $query = User::where('id','!=',1);
         $searchParams = $reqData['Data']['SearchParams'];
 
         $query = $query->where(function($q) use($searchParams){

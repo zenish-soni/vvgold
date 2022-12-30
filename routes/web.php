@@ -150,6 +150,7 @@ Route::group(['prefix' => USER_NAME, 'namespace' => USER_NAMESPACE_PREFIX, 'midd
         Route::prefix('product')->name('product.')->group(function(){
             Route::post('store','store')->name('store');
             Route::post('delete','delete')->name('delete');
+            Route::post('change-status','changeStatus')->name('change_status');
             Route::post('store-weight','storeWeight')->name('store_weight');
             Route::post('images','getProductImages')->name('images');
             Route::post('image/store','storeProductImage')->name('image.store');

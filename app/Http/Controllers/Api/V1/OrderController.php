@@ -29,11 +29,16 @@ class OrderController extends BaseController
             $limit = $reqData['limit'];
             $offset = (!empty($reqData) && !empty($reqData['offset'])) ? $reqData['offset'] : 0;
                 
-            $records = Order::whereHas('details')->withCount('details')->where('user_id',$authId)->orderByDesc('id')->take($limit)->offset($offset)->get()->toArray();
+            $records = Order::whereHas('details.product')->with('details.product')->withCount('details')->where('user_id',$authId)->orderByDesc('id')->take($limit)->offset($offset)->get()->toArray();
 
             if(!empty($records)){
                 foreach($records as $key => $record){
+                    $totalWeight = array_sum(array_map(function($a){
+                        return $a['product']['weight'] * $a['quantity'];
+                    }, $record['details']));
+                    
                     $records[$key]['invoice_number'] = $record['id'];
+                    $records[$key]['total_weight'] = $totalWeight;
                     $records[$key]['created_date'] = config_date($record['created_at']);
                     $records[$key]['created_time'] = config_time($record['created_at']);
                     $records[$key]['status_name'] = $this->getStatusName($record['status']);
@@ -45,7 +50,7 @@ class OrderController extends BaseController
                         $records[$key]['details'][$key2]['size_name'] = !empty($detail['product']['size']) ? $detail['product']['size']['name'] : '';
                         unset($records[$key]['details'][$key2]['product'], $records[$key]['details'][$key2]['created_at'], $records[$key]['details'][$key2]['updated_at']);
                     }*/
-                    unset($records[$key]['created_at'],$records[$key]['user_id'],$records[$key]['updated_at'],$records[$key]['invoice_name'],$records[$key]['invoice_short_name']);
+                    unset($records[$key]['details'],$records[$key]['created_at'],$records[$key]['user_id'],$records[$key]['updated_at'],$records[$key]['invoice_name'],$records[$key]['invoice_short_name']);
                 }
             }
 
@@ -74,10 +79,16 @@ class OrderController extends BaseController
         
         if($checkRequiredField == 'SUCC100'){
             $id = $reqData['id'];
+
+            $totalWeight = 0;
                 
             $orderDetail = OrderDetail::whereHas('product')->with('product')->where('order_id',$id)->get()->toArray();
 
             if(!empty($orderDetail)){
+                $totalWeight = array_sum(array_map(function($a){
+                    return $a['product']['weight'] * $a['quantity'];
+                }, $orderDetail));
+
                 foreach($orderDetail as $key => $detail){
                     $orderDetail[$key]['code'] = $detail['product']['code'];
                     $orderDetail[$key]['weight'] = $detail['product']['weight'];
@@ -85,6 +96,8 @@ class OrderController extends BaseController
                     $orderDetail[$key]['size_name'] = !empty($detail['product']['size']) ? $detail['product']['size']['name'] : '';
                     unset($orderDetail[$key]['product'], $orderDetail[$key]['created_at'], $orderDetail[$key]['updated_at']);
                 }
+
+                $response->total_weight = $totalWeight;
             }
 
             $response->Data = $orderDetail;

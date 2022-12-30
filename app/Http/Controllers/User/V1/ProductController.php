@@ -32,11 +32,13 @@ class ProductController extends BaseController
         $records = route('products.lists');
         $storeRecord = route('product.store');
         $destroyRecord = route('product.delete');
+        $changeStatus = route('product.change_status');
         $storeWeightUpdate = route('product.store_weight');
 
         $getProductImagesRoute = route('product.images');
         $storeProductImageRoute = route('product.image.store');
         $deleteProductImageRoute = route('product.image.delete');
+
 
         $cataloguePath = '';
         $setting = \App\Models\Setting::find(1);
@@ -62,6 +64,7 @@ class ProductController extends BaseController
             'destroyRecord'             => $destroyRecord,
             'storeWeightUpdate'         => $storeWeightUpdate,
             'configData'                => $configData,
+            'changeStatus'              => $changeStatus,
             'getProductImagesRoute'     => $getProductImagesRoute, 
             'storeProductImageRoute'    => $storeProductImageRoute, 
             'deleteProductImageRoute'   => $deleteProductImageRoute,
@@ -224,18 +227,11 @@ class ProductController extends BaseController
                     })->save(storage_path('app/media/thumb/'.$thumbImagePath));
 
                     $record->image = $imagePath;
+                    $record->percentage = $size['percentage'];
+                    $record->image_width = $this->getWidthBasedOnPercentage($size['percentage']);
                     $record->thumb_image = $thumbImagePath;
                     $record->lu_size_id = $size['id'];
                     $record->save();
-
-                    //Send Notification 
-                    // Get all tokens
-                    $deviceTokens = \App\Models\User::where('is_approved',2)->whereNotNull('device_token')->pluck('device_token')->toArray();
-                    if(!empty($deviceTokens)){
-                        $message = "New product has been added.";
-                        $this->pushNotifications($deviceTokens,$message,$record->id);
-                    }
-
                 }
 
                 $response->IsSuccess = true;
@@ -435,7 +431,22 @@ class ProductController extends BaseController
             }
             
             if($status == 1){
-                Product::whereIn('id',$ids)->update(['is_popular' => 1]);   
+                Product::whereIn('id',$ids)->update(['is_popular' => 1]);
+                
+                $deviceTokens = \App\Models\User::where('is_approved',2)->whereNotNull('device_token')->pluck('device_token')->toArray();
+
+                if(!empty($ids) && !empty($deviceTokens)){
+                    // Get all tokens
+
+                    foreach($ids as $id){
+                        $productDetail = Product::find($id);
+                        if(!empty($productDetail)){
+                            // Get all tokens
+                            $message = "New popular product {$productDetail->code} has been added.";
+                            $this->pushNotifications($deviceTokens,$message,$productDetail->id, AppConstant::getImage($productDetail->image));
+                        }
+                    }    
+                }
             }else{
                 Product::whereIn('id',$ids)->update(['is_popular' => 0]);
             }
@@ -444,6 +455,33 @@ class ProductController extends BaseController
             $response->Message =  trans('messages.updated_record');
         }
         else{
+            $response->Message = $checkRequiredField;
+        }
+        return $this->GetJsonResponse($response);
+    }
+
+    /**
+     * Change approved status
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request){
+        $reqData = $request->all();
+        $response = new ServiceResponse;
+        $checkFields = array('id');
+        $checkRequiredField = $this->checkRequestData($checkFields,$reqData);
+
+        if($checkRequiredField == 'SUCC100'){
+            $id = $reqData['id'];
+
+            $record = Product::find($id);
+            $record->status = !empty($reqData['checkedValue']) ? 1 : 0;
+            $record->save();
+
+            $response->IsSuccess = true;
+            $response->Message = $record->status == 0 ?  "User has been inactive successfully." :  "User has been active successfully.";
+        }else{
             $response->Message = $checkRequiredField;
         }
         return $this->GetJsonResponse($response);
