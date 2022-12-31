@@ -39,6 +39,7 @@
                         <th>Name</th>
                         <th>{{$parentName}}</th>
                         <th>Image</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -52,6 +53,12 @@
                             <a data-bind="attr:{href:$data.image}" target="_blank">
                                 <img data-bind="attr:{src:$data.image}" style="width:100px;height: 100px;object-fit:contain;">
                             </a>
+                        </td>
+                        <td>
+                            <label class="form-switch">
+                                <input type="checkbox" data-bind="checked: $data.status,attr:{name:$data.id()+'status',id:$data.id()},click:$root.stateChange">
+                                <i></i>
+                            </label>
                         </td>
                         <td>
                             <div class="btn-group">

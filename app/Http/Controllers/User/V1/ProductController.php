@@ -20,10 +20,10 @@ class ProductController extends BaseController
     {
         $title = "Products";
         $categories = LuCategory::with(['subCategory' => function($q){
-            $q->select('id','name','lu_category_id');
-        }])->get()->toArray();
+            $q->select('id','name','lu_category_id')->where('status',1);
+        }])->where('status',1)->get()->toArray();
 
-        $subSubCategories = SubSubCategory::get()->toArray();
+        $subSubCategories = SubSubCategory::where('status',1)->get()->toArray();
         $sizes = LuSize::get()->toArray();
         $codes = LuCode::get()->toArray();
         $searchTerms = LuSearchTerm::get()->toArray();
@@ -87,7 +87,13 @@ class ProductController extends BaseController
         $limit = $pageSize;
         $offset = ($pageIndex - 1) * $pageSize;
 
-        $query = Product::whereHas('category')->whereHas('size')->with('category','subCategory','size','subSubCategory');
+        $query = Product::whereHas('category',function($q){
+            $q->where('status',1);
+        })->whereHas('size')->with(['category','size','subCategory' => function($q){
+            $q->where('status',1);
+        },'subSubCategory' => function($q){
+            $q->where('status',1);
+        }]);
         $searchParams = $reqData['Data']['SearchParams'];
 
         $query = $query->where(function($q) use($searchParams){
@@ -480,7 +486,7 @@ class ProductController extends BaseController
             $record->save();
 
             $response->IsSuccess = true;
-            $response->Message = $record->status == 0 ?  "User has been inactive successfully." :  "User has been active successfully.";
+            $response->Message = $record->status == 0 ?  "Product has been inactive successfully." :  "Product has been active successfully.";
         }else{
             $response->Message = $checkRequiredField;
         }

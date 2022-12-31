@@ -28,6 +28,6 @@ class LuCategory extends Model
      * Get Category Name
      **/
     public function subCategory(){
-        return $this->hasMany(LuSubCategory::class,'lu_category_id');
+        return $this->hasMany(LuSubCategory::class,'lu_category_id')->where('status',1);
     }
 }

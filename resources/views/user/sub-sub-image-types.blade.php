@@ -41,6 +41,7 @@
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Image</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -55,6 +56,12 @@
                             <a data-bind="attr:{href:$data.image}" target="_blank">
                                 <img data-bind="attr:{src:$data.image}" style="width:100px;height: 100px;object-fit:contain;">
                             </a>
+                        </td>
+                        <td>
+                            <label class="form-switch">
+                                <input type="checkbox" data-bind="checked: $data.status,attr:{name:$data.id()+'status',id:$data.id()},click:$root.stateChange">
+                                <i></i>
+                            </label>
                         </td>
                         <td>
                             <div class="btn-group">
@@ -167,7 +174,7 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", destoryRecord="{{$destoryRecord}}", categories=@json($categories);
+    var getRecords = "{{$records}}", storeRecord="{{$storeRecord}}", destoryRecord="{{$destoryRecord}}", changeStatus="{{$changeStatus}}", categories=@json($categories);
 </script>
 <script src="{{asset('public/js/pagejs/types/sub-sub-image-type.js?'.time())}}"></script>
 @endsection

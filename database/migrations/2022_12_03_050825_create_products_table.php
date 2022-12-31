@@ -29,6 +29,7 @@ return new class extends Migration
             $table->unsignedInteger('height');
             $table->unsignedInteger('weight');
             $table->unsignedTinyInteger('is_popular')->default(0);
+            $table->unsignedTinyInteger('status')->default(1)->comment("0=InActive,1=Active");
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('lu_size_id')->references('id')->on('lu_sizes')->onDelete('cascade');

@@ -36,7 +36,13 @@ class ProductController extends BaseController
                 $response->Message = $this->getValidationMessagesFormat($validator->messages());
             }else{
                 
-                $query = Product::active()->with('size');
+                $query = Product::active()->whereHas('category',function($q){
+                    $q->where('status',1);
+                })->whereHas('size')->with(['category','size','subCategory' => function($q){
+                    $q->where('status',1);
+                },'subSubCategory' => function($q){
+                    $q->where('status',1);
+                }]);
 
                 if(!empty($reqData['lu_category_id'])){
                     $query = $query->where('lu_category_id',$reqData['lu_category_id']);
@@ -65,7 +71,7 @@ class ProductController extends BaseController
                         $records[$key]['weight'] = !empty($record['weight']) ? (float)($record['weight']) : 0;
                         $records[$key]['image'] = AppConstant::getImage($record['image']);
                         $records[$key]['size_name'] = !empty($record['size']) ? $record['size']['name'] : '';
-                        unset($records[$key]['size']);
+                        unset($records[$key]['size'],$records[$key]['category'],$records[$key]['sub_sub_category'],$records[$key]['sub_category']);
                     }
                 }
 

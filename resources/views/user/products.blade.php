@@ -169,7 +169,7 @@
                                 <button class="btn btn-sm icon" data-bind="click:$root.productImageEventHandler">
                                     <i class='bx bx-images'></i>
                                 </button>
-                                <button class="btn btn-sm icon" data-bind="click:$root.deleteRecord"><i class="bx bxs-trash"></i></button>
+                                <!-- <button class="btn btn-sm icon" data-bind="click:$root.deleteRecord"><i class="bx bxs-trash"></i></button> -->
                             </div>
                         </td>
                     </tr>

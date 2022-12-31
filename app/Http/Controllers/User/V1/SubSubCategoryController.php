@@ -22,6 +22,7 @@ class SubSubCategoryController extends BaseController
         $records = route('sub_sub_categories.list');
         $storeRecord = route('sub_sub_category.store');
         $destoryRecord = route('sub_sub_category.delete');
+        $changeStatus = route('sub_sub_category.change_status');
         $title = "Sub Sub Category";
 
         return view('user/sub-sub-image-types',[
@@ -29,6 +30,7 @@ class SubSubCategoryController extends BaseController
             'records' => $records, 
             'storeRecord' => $storeRecord, 
             'destoryRecord' => $destoryRecord,
+            'changeStatus' => $changeStatus,
             'categories' => $categories
         ]);
     }
@@ -163,6 +165,32 @@ class SubSubCategoryController extends BaseController
             }
         }
         else{
+            $response->Message = $checkRequiredField;
+        }
+        return $this->GetJsonResponse($response);
+    }
+
+    /**
+     * Change user status
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request){
+        $reqData = $request->all();
+        $response = new ServiceResponse;
+        $checkFields = array('id');
+        $checkRequiredField = $this->checkRequestData($checkFields,$reqData);
+
+        if($checkRequiredField == 'SUCC100'){
+            $id = $reqData['id'];
+            $record = SubSubCategory::find($id);
+            $record->status = !empty($reqData['checkedValue']) ? $reqData['checkedValue'] : 0;
+            $record->save();
+
+            $response->IsSuccess = true;
+            $response->Message = $record->status == 0 ?  "Item has been inactive successfully." :  "Item has been active successfully.";
+        }else{
             $response->Message = $checkRequiredField;
         }
         return $this->GetJsonResponse($response);

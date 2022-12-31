@@ -98,7 +98,7 @@ class DashboardController extends BaseController
      */
     public function getCategory(){
         $response = new ServiceResponse();
-        $records = \App\Models\LuCategory::withCount('subCategory')->get();
+        $records = \App\Models\LuCategory::where('status',1)->withCount('subCategory')->get();
         if(!empty($records)){
             foreach($records as $key => $record){
                 unset($records[$key]['created_at'], $records[$key]['updated_at'], $records[$key]['deleted_at']);
@@ -134,7 +134,7 @@ class DashboardController extends BaseController
             }else{
                 $categoryId = $reqData['id'];
 
-                $records = \App\Models\LuSubCategory::withCount('subSubCategory')->where('lu_category_id',$categoryId)->get()->toArray();
+                $records = \App\Models\LuSubCategory::withCount('subSubCategory')->where(['lu_category_id' => $categoryId,'status' => 1])->get()->toArray();
 
                 if(!empty($records)){
                     foreach($records as $key => $record){
@@ -177,7 +177,7 @@ class DashboardController extends BaseController
             }else{
                 $categoryId = $reqData['id'];
 
-                $response->Data = \App\Models\SubSubCategory::where('lu_sub_category_id',$categoryId)->select('id','name','image')->get()->toArray();
+                $response->Data = \App\Models\SubSubCategory::where(['lu_sub_category_id' => $categoryId, 'status' => 1])->select('id','name','image')->get()->toArray();
                 $response->IsSuccess = true;
             }
         }

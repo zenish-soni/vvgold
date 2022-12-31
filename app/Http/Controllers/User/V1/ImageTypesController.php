@@ -195,7 +195,7 @@ class ImageTypesController extends BaseController
             $record->save();
 
             $response->IsSuccess = true;
-            $response->Message = $record->status == 1 ?  trans('messages.enable_record') :  trans('messages.disabled_record');
+            $response->Message = $record->status == 0 ?  "Item has been inactive successfully." :  "Item has been active successfully.";
         }else{
             $response->Message = $checkRequiredField;
         }

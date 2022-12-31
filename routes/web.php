@@ -115,6 +115,7 @@ Route::group(['prefix' => USER_NAME, 'namespace' => USER_NAMESPACE_PREFIX, 'midd
         Route::prefix('sub-sub-category')->name('sub_sub_category.')->group(function(){
             Route::post('store','store')->name('store');
             Route::post('delete','destroy')->name('delete');
+            Route::post('change-status','changeStatus')->name('change_status');
         });
     });
 

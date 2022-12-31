@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('lu_category_id');
             $table->unsignedInteger('lu_sub_category_id');
+            $table->unsignedTinyInteger('status')->default(1)->comment("0=InActive,1=Active");
             $table->char('name');
             $table->char('image');
             $table->timestamps();

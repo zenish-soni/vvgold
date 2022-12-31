@@ -18,6 +18,7 @@ return new class extends Migration
             $table->char('name',100)->unique();
             $table->char('code',100);
             $table->char('image');
+            $table->unsignedTinyInteger('status')->default(1)->comment("0=InActive,1=Active");
             $table->timestamps();
             $table->softDeletes();
         });

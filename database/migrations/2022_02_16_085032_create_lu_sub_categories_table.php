@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('lu_category_id');
             $table->char('name');
             $table->char('image');
+            $table->unsignedTinyInteger('status')->default(1)->comment("0=InActive,1=Active");
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('lu_category_id')->references('id')->on('lu_categories')->onDelete('cascade');
