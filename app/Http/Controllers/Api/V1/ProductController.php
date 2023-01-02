@@ -293,28 +293,31 @@ class ProductController extends BaseController
             }else{
                 $id = $reqData['id'];
                 $productDetail = Product::find($id);
+                if(!empty($productDetail) && $productDetail->status == 1){
+                    $response->id = $productDetail->id;
+                    $response->percentage = $productDetail->percentage;
+                    $response->image_width = $productDetail->image_width;
+                    $response->category_name = $productDetail->category->name;
+                    $response->sub_category_name = !empty($productDetail->subCategory) ? $productDetail->subCategory->name : '';
+                    $response->sub_sub_category_name = !empty($productDetail->subSubCategory) ? $productDetail->subSubCategory->name : '';
+                    $response->size_name = !empty($productDetail->size) ? $productDetail->size->name : '';
+                    $response->code = $productDetail->code;
+                    $image = AppConstant::getImage($productDetail->image);
+                    $response->image = $image;
+                    $response->description = $this->convertNullToChar($productDetail->description);
+                    $response->weight = $productDetail->weight;
 
-                $response->id = $productDetail->id;
-                $response->percentage = $productDetail->percentage;
-                $response->image_width = $productDetail->image_width;
-                $response->category_name = $productDetail->category->name;
-                $response->sub_category_name = !empty($productDetail->subCategory) ? $productDetail->subCategory->name : '';
-                $response->sub_sub_category_name = !empty($productDetail->subSubCategory) ? $productDetail->subSubCategory->name : '';
-                $response->size_name = !empty($productDetail->size) ? $productDetail->size->name : '';
-                $response->code = $productDetail->code;
-                $image = AppConstant::getImage($productDetail->image);
-                $response->image = $image;
-                $response->description = $this->convertNullToChar($productDetail->description);
-                $response->weight = $productDetail->weight;
-
-                $images = array(array('image' => $image));
-                if(!empty($productDetail->photos)){
-                    foreach($productDetail->photos as $photo){
-                        array_push($images,array('image' => AppConstant::getImage($photo['image'])));
+                    $images = array(array('image' => $image));
+                    if(!empty($productDetail->photos)){
+                        foreach($productDetail->photos as $photo){
+                            array_push($images,array('image' => AppConstant::getImage($photo['image'])));
+                        }
                     }
-                }
-                $response->images = $images;
-                $response->IsSuccess = true;
+                    $response->images = $images;
+                    $response->IsSuccess = true;
+                }else{
+                    $response->Message = "Product not found";
+                }                
             }
         }else{
             $response->Message = $checkRequiredField;
