@@ -18,6 +18,18 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedInteger('quantity');
+            $table->char('category_name')->nullable();
+            $table->char('sub_category_name')->nullable();
+            $table->char('sub_sub_category_name')->nullable();
+            $table->char('size_name')->nullable();
+            $table->char('code')->nullable();
+            $table->char('image')->nullable();
+            $table->char('thumb_image')->nullable();
+            $table->json('search_term_ids')->nullable();
+            $table->string('description')->nullable();
+            $table->unsignedInteger('width');
+            $table->unsignedInteger('height');
+            $table->unsignedInteger('weight');
             $table->timestamps();
         });
     }

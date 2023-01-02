@@ -29,12 +29,12 @@ class OrderController extends BaseController
             $limit = $reqData['limit'];
             $offset = (!empty($reqData) && !empty($reqData['offset'])) ? $reqData['offset'] : 0;
                 
-            $records = Order::whereHas('details.product')->with('details.product')->withCount('details')->where('user_id',$authId)->orderByDesc('id')->take($limit)->offset($offset)->get()->toArray();
+            $records = Order::whereHas('details')->with('details')->withCount('details')->where('user_id',$authId)->orderByDesc('id')->take($limit)->offset($offset)->get()->toArray();
 
             if(!empty($records)){
                 foreach($records as $key => $record){
                     $totalWeight = array_sum(array_map(function($a){
-                        return $a['product']['weight'] * $a['quantity'];
+                        return $a['weight'] * $a['quantity'];
                     }, $record['details']));
                     
                     $records[$key]['invoice_number'] = $record['id'];
@@ -82,19 +82,18 @@ class OrderController extends BaseController
 
             $totalWeight = 0;
                 
-            $orderDetail = OrderDetail::whereHas('product')->with('product')->where('order_id',$id)->get()->toArray();
+            $orderDetail = OrderDetail::where('order_id',$id)->get()->toArray();
 
             if(!empty($orderDetail)){
                 $totalWeight = array_sum(array_map(function($a){
-                    return $a['product']['weight'] * $a['quantity'];
+                    return $a['weight'] * $a['quantity'];
                 }, $orderDetail));
 
                 foreach($orderDetail as $key => $detail){
-                    $orderDetail[$key]['code'] = $detail['product']['code'];
-                    $orderDetail[$key]['weight'] = $detail['product']['weight'];
-                    $orderDetail[$key]['image'] = AppConstant::getImage($detail['product']['image']);
-                    $orderDetail[$key]['size_name'] = !empty($detail['product']['size']) ? $detail['product']['size']['name'] : '';
-                    unset($orderDetail[$key]['product'], $orderDetail[$key]['created_at'], $orderDetail[$key]['updated_at']);
+                    $orderDetail[$key]['code'] = $detail['code'];
+                    $orderDetail[$key]['weight'] = $detail['weight'];
+                    $orderDetail[$key]['image'] = AppConstant::getImage($detail['image']);
+                    unset($orderDetail[$key]['created_at'], $orderDetail[$key]['updated_at']);
                 }
 
                 $response->total_weight = $totalWeight;
@@ -264,41 +263,6 @@ class OrderController extends BaseController
         $response->total_item = UserCart::where('user_id',$authId)->count();
 
         $response->IsSuccess = true;
-        return $this->GetJsonResponse($response);
-    }
-
-    /**
-     * Store Checkout
-     * Method POST
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function storeCheckout(Request $request){
-        $response = new ServiceResponse;
-        $authId = Auth::guard('api')->user()->id;
-
-        $records = UserCart::where('user_id',$authId)->get();
-        if(!empty($records)){
-            $order = new Order;
-            $order->user_id = $authId;
-            $order->status = 1;
-            $order->save();
-
-            $orderId = $order->id;
-
-            foreach($records as $item){
-                $orderDetail = new OrderDetail;
-                $orderDetail->order_id = $orderId;
-                $orderDetail->product_id = $item['product_id'];
-                $orderDetail->quantity = $item['quantity'];
-                $orderDetail->save();
-            }
-
-            UserCart::where('user_id',$authId)->delete();
-            $response->IsSuccess = true;
-        }else{
-            $response->Message = "Your cart is empty";
-        }
         return $this->GetJsonResponse($response);
     }
 }

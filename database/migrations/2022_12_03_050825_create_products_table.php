@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedInteger('lu_sub_category_id')->nullable();
             $table->unsignedInteger('sub_sub_category_id')->nullable();
             $table->unsignedInteger('lu_size_id');
-            $table->char('name');
             $table->char('code');
             $table->char('image');
             $table->char('thumb_image');

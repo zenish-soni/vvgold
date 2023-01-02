@@ -52,7 +52,7 @@ class OrderController extends BaseController
         $limit = $pageSize;
         $offset = ($pageIndex - 1) * $pageSize;
 
-        $query = Order::whereHas('details.product')->whereHas('user')->with('details.product.size','user');
+        $query = Order::whereHas('details')->whereHas('user')->with('details','user');
         $searchParams = $reqData['Data']['SearchParams'];
 
         $query = $query->where(function($q) use($searchParams){
@@ -78,11 +78,11 @@ class OrderController extends BaseController
                 $records[$key]['Index'] = $index++;
 
                 $totalWeight = array_sum(array_map(function($a){
-                    return $a['product']['weight'] * $a['quantity'];
+                    return $a['weight'] * $a['quantity'];
                 }, $item['details']));
 
                 foreach($item['details'] as $key2 => $item2){
-                    $records[$key]['details'][$key2]['product']['image'] = AppConstant::getImage($item2['product']['image']);
+                    $records[$key]['details'][$key2]['image'] = AppConstant::getImage($item2['image']);
                 }
                 $records[$key]['total_weight'] = $totalWeight;
                 $records[$key]['created_at'] = config_date($item['created_at']);

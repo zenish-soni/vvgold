@@ -239,11 +239,28 @@ class ProductController extends BaseController
             $orderId = $order->id;
 
             foreach($records as $item){
-                $orderDetail = new OrderDetail;
-                $orderDetail->order_id = $orderId;
-                $orderDetail->product_id = $item['product_id'];
-                $orderDetail->quantity = $item['quantity'];
-                $orderDetail->save();
+                $productId = $item['product_id'];
+                $productDetail = Product::find($productId);
+
+                if(!empty($productDetail) && !empty($productDetail->status)){
+                    $orderDetail = new OrderDetail;
+                    $orderDetail->order_id = $orderId;
+                    $orderDetail->product_id = $productId;
+                    $orderDetail->quantity = $item['quantity'];
+                    $orderDetail->category_name = !empty($productDetail->category) ? $productDetail->category->name : '';
+                    $orderDetail->sub_category_name = !empty($productDetail->subCategory) ? $productDetail->subCategory->name : '';
+                    $orderDetail->sub_sub_category_name = !empty($productDetail->subSubCategory) ? $productDetail->subSubCategory->name : '';
+                    $orderDetail->size_name = $productDetail->size->name;
+                    $orderDetail->code = $productDetail->code;
+                    $orderDetail->image = $productDetail->image;
+                    $orderDetail->thumb_image = $productDetail->thumb_image;
+                    $orderDetail->description = $productDetail->description;
+                    $orderDetail->weight = $productDetail->weight;
+                    $orderDetail->search_term_ids = $productDetail->search_term_ids;
+                    $orderDetail->percentage = $productDetail->percentage;
+                    $orderDetail->image_width = $productDetail->image_width;
+                    $orderDetail->save();    
+                }
             }
 
             UserCart::where('user_id',$authId)->delete();

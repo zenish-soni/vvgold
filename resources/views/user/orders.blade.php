@@ -178,13 +178,13 @@
                         <tr>
                             <td data-bind="text:$index() + 1"></td>
                             <td>
-                                <img class="img-fluid" data-bind="attr:{src:$data.product.image}" style="width:100px;height:auto" />
+                                <img class="img-fluid" data-bind="attr:{src:$data.image}" style="width:100px;height:auto" />
                             </td>
-                            <td data-bind="text:$data.product.code"></td>
-                            <td data-bind="text:$data.product.size.name"></td>
-                            <td data-bind="text:$data.product.weight"></td>
+                            <td data-bind="text:$data.code"></td>
+                            <td data-bind="text:$data.size_name"></td>
+                            <td data-bind="text:$data.weight"></td>
                             <td data-bind="text:$data.quantity"></td>
-                            <td data-bind="text:$data.quantity() * $data.product.weight()"></td>
+                            <td data-bind="text:$data.quantity() * $data.weight()"></td>
                         </tr>
                     </tbody>
                 </table>

@@ -28,18 +28,18 @@
 			<table class="mb-1">
 				<tr>
 					<td rowspan="4">
-						<img src="{{$item['product']['thumb_image']}}" alt="logo" style="width:50px;height:auto;" />
+						<img src="{{$item['thumb_image']}}" alt="logo" style="width:50px;height:auto;" />
 					</td>
-					<td><b>Code:</b><span class="ms-1">{{$item['product']['code']}}</span></td>
+					<td><b>Code:</b><span class="ms-1">{{$item['code']}}</span></td>
 				</tr>
 				<tr>
 					<td><b>Quantity:</b><span class="ms-1">{{$item['quantity']}}</span></td>
 				</tr>
 				<tr>
-					<td><b>Weight:</b><span class="ms-1">{{$item['product']['weight']}}</span></td>
+					<td><b>Weight:</b><span class="ms-1">{{$item['weight']}}</span></td>
 				</tr>
 				<tr>
-					<td><b>Total:</b><span class="ms-1">{{$item['quantity'] * $item['product']['weight']}}</span></td>
+					<td><b>Total:</b><span class="ms-1">{{$item['quantity'] * $item['weight']}}</span></td>
 				</tr>
 			</table>
 			@endforeach

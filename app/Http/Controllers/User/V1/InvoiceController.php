@@ -28,7 +28,7 @@ class InvoiceController extends BaseController
             $isShort = str_contains($request->path(), 'generate-short-invoice');
 
             //Get Order Details
-            $orderDetail = Order::whereHas('details')->with('details.product','user')->find($orderId);
+            $orderDetail = Order::whereHas('details')->with('details','user')->find($orderId);
 
             if(!empty($orderDetail)){
                 $orderInfo = $orderDetail->toArray();
@@ -40,11 +40,11 @@ class InvoiceController extends BaseController
                 $fileName = $invoiceNo.'.pdf';
 
                 $totalWeight = array_sum(array_map(function($a){
-                    return $a['product']['weight'] * $a['quantity'];
+                    return $a['weight'] * $a['quantity'];
                 }, $orderInfo['details']));
 
                 foreach($orderInfo['details'] as $key => $item){
-                    $orderInfo['details'][$key]['product']['thumb_image'] = AppConstant::getImageThumb($item['product']['thumb_image']);
+                    $orderInfo['details'][$key]['thumb_image'] = AppConstant::getImageThumb($item['thumb_image']);
                 }
 
                 $pdf = PDF::loadView('pdf/invoice',['orderInfo' => $orderInfo, 'totalWeight' => $totalWeight,'userName' => $userName,'isShort' => $isShort]);
