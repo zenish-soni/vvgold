@@ -43,58 +43,112 @@
 	            z-index:  -1000;
 	             opacity: 0.3; 
 	        }
+
+
+
+	        #resp-table {
+				width: 100%;
+				display: table;
+			}
+			#resp-table-header{
+				display: table-header-group;
+				/*background-color: gray;
+				font-weight: bold;*/
+				font-size: 18px;
+			}
+			.table-header-cell{
+				display: table-cell;
+				text-align: justify;
+				padding: 10px;
+				border: 2px solid #c69a1d;
+			}
+			#resp-table-body{
+				display: table-row-group;
+			}
+
+			.resp-table-row{
+				display: table-row;
+			}
+			.table-body-cell{
+				display: table-cell;
+				text-align: center;
+				vertical-align: middle;
+				padding:5px;
+				border: 2px solid #c69a1d;
+			}
 	    </style>
 	</head>
 
 	<body>
 		 <div id="watermark" class="">
-        <img src="{{ public_path('img/logo.png') }}" height="auto" width="400px" />
-    </div>
+	        <img src="{{ public_path('img/logo.png') }}" height="auto" width="400px" />
+	    </div>
 		<div class="row">
-			@if(!empty($array1))
-			<table class="mb-1">
-				<thead>
-					<tr>
-						<th>NO</th>
-						<th>BEADS</th>
-						<th>SIZE</th>
-						<th>APPROX. WT</th>
-					</tr>
-				</thead>
-				@foreach($array1 as $item)
-				<tbody>
-					<tr>
-						<td>{{$item['code']}}</td>
-						<td><img src="{{$item['thumb_image']}}" alt="logo" style="width:40px;height:auto;" /></td>
-						<td>{{$item['size_name']}}</td>
-						<td>{{$item['weight']}}</td>
-					</tr>
-				</tbody>
-				@endforeach
-			</table>
-			@endif
+			@if(!empty($records))
+			<div id="resp-table">
+				<div id="resp-table-header">
+					<div class="table-header-cell">
+						NO
+					</div>
+					<div class="table-header-cell">
+						BEADS
+					</div>
+					<div class="table-header-cell">
+						SIZE
+					</div>
+					<div class="table-header-cell">
+						APPROX. WT
+					</div>
 
-			@if(!empty($array2))
-			<table class="mb-1">
-				<thead>
-					<tr>
-						<th>NO</th>
-						<th>BEADS</th>
-						<th>SIZE</th>
-						<th>APPROX. WT</th>
-					</tr>
-				</thead>
-				@foreach($array2 as $item)
-				<tbody>
-					<tr>
-						<td>{{$item['code']}}</td>
-						<td><img src="{{$item['thumb_image']}}" alt="logo" style="width:40px;height:auto;" /></td>
-						<td>{{$item['size_name']}}</td>
-						<td>{{$item['weight']}}</td>
-					</tr>
-				</tbody>
-				@endforeach
-			</table>
+					<div class="table-header-cell">
+						NO
+					</div>
+					<div class="table-header-cell">
+						BEADS
+					</div>
+					<div class="table-header-cell">
+						SIZE
+					</div>
+					<div class="table-header-cell">
+						APPROX. WT
+					</div>
+				</div>
+
+				<div id="resp-table-body">
+					@for ($i = 0; $i < count($records); $i++) 
+					@if(($i % 2) == 0)
+					<div class="resp-table-row">
+						<div class="table-body-cell">
+							{{$records[$i]['code']}}
+						</div>
+						<div class="table-body-cell">
+							<img src="{{$records[$i]['thumb_image']}}" alt="logo" style="width:40px;height:auto;" />
+						</div>
+						<div class="table-body-cell">
+							{{$records[$i]['size_name']}}
+						</div>
+						<div class="table-body-cell">
+							{{$records[$i]['weight']}}
+						</div>
+
+					@else
+						<div class="table-body-cell">
+							{{$records[$i]['code']}}
+						</div>
+						<div class="table-body-cell">
+							<img src="{{$records[$i]['thumb_image']}}" alt="logo" style="width:40px;height:auto;" />
+						</div>
+						<div class="table-body-cell">
+							{{$records[$i]['size_name']}}
+						</div>
+						<div class="table-body-cell">
+							{{$records[$i]['weight']}}
+						</div>
+					</div>
+					@endif
+					@endfor
+				</div>
+			</div>
 			@endif
 		</div>
 	</body>

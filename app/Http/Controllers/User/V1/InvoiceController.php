@@ -67,9 +67,9 @@ class InvoiceController extends BaseController
      */
     public function generateCatalogue(Request $request)
     {
+        ini_set('memory_limit', '1024M');
         $searchParams = $request->all();
         $query = \App\Models\Product::whereHas('size')->with('size');
-
         $query = $query->where(function($q) use($searchParams){
             if(array_key_exists('lu_category_id',$searchParams) && !empty($searchParams['lu_category_id'])){
                 $categoryId = $searchParams['lu_category_id'];
@@ -111,19 +111,9 @@ class InvoiceController extends BaseController
                 unset($records[$key]['size']);
             }
         }
+        //return view('pdf/catalogue',['records' => $records]);
 
-        $array1 = $array2 = [];
-        
-        if(!empty($records)){
-            $checkLength = count($records);
-            if($checkLength > 1){
-                list($array1, $array2) = array_chunk($records, ceil(count($records) / 2));
-            }else{
-                $array1 = $records;
-            }
-        }
-
-        $pdf = PDF::loadView('pdf/catalogue',['array1' => $array1,'array2' => $array2]);
+        $pdf = PDF::loadView('pdf/catalogue',['records' => $records]);
         //return $pdf->stream();
         $fileName = 'catalogue.pdf';
         $pdf->save(INQUIRY_FOLDER_PATH.$fileName);
@@ -145,6 +135,7 @@ class InvoiceController extends BaseController
      */
     public function generateSingleCatalogue(Request $request)
     {
+        ini_set('memory_limit', '1024M');
         $searchParams = $request->all();
         $query = \App\Models\Product::whereHas('size')->with('size');
 
